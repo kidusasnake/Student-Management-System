@@ -1,113 +1,148 @@
-{% extends "base.html" %}
-
-{% block title %}Dashboard — StudentHub{% endblock %}
-
+{% extends "base.html" %} {% block title %}Dashboard — StudentHub{% endblock %}
 {% block content %}
 <!-- Page Header -->
 <div class="page-header fade-in-up">
-    <div>
-        <h1>Dashboard</h1>
-        <p>Overview of all registered students</p>
-    </div>
-    <div class="header-actions" style="display: flex; gap: 0.75rem;">
-        <a href="/export" class="btn btn-secondary" id="export-csv-btn">
-            📥 Export CSV
-        </a>
-        <a href="/add" class="btn btn-primary" id="add-student-btn">
-            ➕ Add Student
-        </a>
-    </div>
+  <div>
+    <h1>Dashboard</h1>
+    <p>Overview of all registered students</p>
+  </div>
+  <div class="header-actions" style="display: flex; gap: 0.75rem">
+    <a href="/export" class="btn btn-secondary" id="export-csv-btn">
+      📥 Export CSV
+    </a>
+    <a href="/add" class="btn btn-primary" id="add-student-btn">
+      ➕ Add Student
+    </a>
+  </div>
 </div>
 
 <!-- Stats Cards -->
 <div class="stats-grid">
-    <div class="stat-card fade-in-up">
-        <div class="stat-card-header">
-            <span class="stat-card-label">Total Students</span>
-            <div class="stat-card-icon">👥</div>
-        </div>
-        <div class="stat-card-value" data-counter="{{ total_students }}">0</div>
+  <div class="stat-card fade-in-up">
+    <div class="stat-card-header">
+      <span class="stat-card-label">Total Students</span>
+      <div class="stat-card-icon">👥</div>
     </div>
-    <div class="stat-card fade-in-up">
-        <div class="stat-card-header">
-            <span class="stat-card-label">Departments</span>
-            <div class="stat-card-icon">🏛️</div>
-        </div>
-        <div class="stat-card-value" data-counter="{{ total_departments }}">0</div>
+    <div class="stat-card-value" data-counter="{{ total_students }}">0</div>
+  </div>
+  <div class="stat-card fade-in-up">
+    <div class="stat-card-header">
+      <span class="stat-card-label">Departments</span>
+      <div class="stat-card-icon">🏛️</div>
     </div>
-    <div class="stat-card fade-in-up">
-        <div class="stat-card-header">
-            <span class="stat-card-label">Average Age</span>
-            <div class="stat-card-icon">📅</div>
-        </div>
-        <div class="stat-card-value" data-counter="{{ avg_age }}">0</div>
+    <div class="stat-card-value" data-counter="{{ total_departments }}">0</div>
+  </div>
+  <div class="stat-card fade-in-up">
+    <div class="stat-card-header">
+      <span class="stat-card-label">Average Age</span>
+      <div class="stat-card-icon">📅</div>
     </div>
+    <div class="stat-card-value" data-counter="{{ avg_age }}">0</div>
+  </div>
 </div>
 
 <!-- Search Section -->
 <div class="search-section fade-in-up">
-    <select id="search-field" class="search-select">
-        <option value="all">All Fields</option>
-        <option value="name">Name</option>
-        <option value="age">Age</option>
-        <option value="department">Department</option>
-    </select>
-    <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="search-input" placeholder="Search students..." autocomplete="off">
+  <div class="custom-dropdown">
+    <input type="hidden" id="search-field" value="all" />
+    <button class="dropdown-toggle" id="dropdown-btn">
+      <span class="dropdown-label">All Fields</span>
+      <svg
+        class="dropdown-arrow"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="dropdown-menu" id="dropdown-menu">
+      <div class="dropdown-item" data-value="all">All Fields</div>
+      <div class="dropdown-item" data-value="name">Name</div>
+      <div class="dropdown-item" data-value="age">Age</div>
+      <div class="dropdown-item" data-value="department">Department</div>
     </div>
+  </div>
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search students..."
+      autocomplete="off"
+    />
+  </div>
 </div>
 
 <!-- Student Table -->
 <div class="table-container fade-in-up">
-    {% if students %}
-    <table class="data-table" id="students-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Department</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="students-tbody">
-            {% for student in students %}
-            <tr>
-                <td><span class="student-id">#{{ student[0] }}</span></td>
-                <td><span class="student-name">{{ student[1] }}</span></td>
-                <td>{{ student[2] }}</td>
-                <td><span class="dept-badge">{{ student[3] }}</span></td>
-                <td>
-                    <div class="actions-cell">
-                        <a href="/edit/{{ student[0] }}" class="btn btn-secondary btn-sm" title="Edit student">✏️ Edit</a>
-                        <button class="btn btn-danger btn-sm" onclick="openDeleteModal({{ student[0] }}, '{{ student[1] }}')" title="Delete student">🗑️ Delete</button>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">📚</div>
-        <h3>No students yet</h3>
-        <p>Start by adding your first student to the system</p>
-        <a href="/add" class="btn btn-primary">➕ Add First Student</a>
-    </div>
-    {% endif %}
+  {% if students %}
+  <table class="data-table" id="students-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Department</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="students-tbody">
+      {% for student in students %}
+      <tr>
+        <td><span class="student-id">#{{ student[0] }}</span></td>
+        <td><span class="student-name">{{ student[1] }}</span></td>
+        <td>{{ student[2] }}</td>
+        <td><span class="dept-badge">{{ student[3] }}</span></td>
+        <td>
+          <div class="actions-cell">
+            <a
+              href="/edit/{{ student[0] }}"
+              class="btn btn-secondary btn-sm"
+              title="Edit student"
+              >✏️ Edit</a
+            >
+            <button
+              class="btn btn-danger btn-sm"
+              onclick="openDeleteModal({{ student[0] }}, '{{ student[1] }}')"
+              title="Delete student"
+            >
+              🗑️ Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon">📚</div>
+    <h3>No students yet</h3>
+    <p>Start by adding your first student to the system</p>
+    <a href="/add" class="btn btn-primary">➕ Add First Student</a>
+  </div>
+  {% endif %}
 </div>
 
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="delete-modal">
-    <div class="modal">
-        <div class="warning-icon">⚠️</div>
-        <h3>Delete Student</h3>
-        <p>Are you sure you want to delete <strong id="delete-student-name"></strong>? This action cannot be undone.</p>
-        <div class="modal-actions">
-            <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-            <button class="btn btn-danger" onclick="confirmDelete()">🗑️ Yes, Delete</button>
-        </div>
+  <div class="modal">
+    <div class="warning-icon">⚠️</div>
+    <h3>Delete Student</h3>
+    <p>
+      Are you sure you want to delete
+      <strong id="delete-student-name"></strong>? This action cannot be undone.
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()">
+        Cancel
+      </button>
+      <button class="btn btn-danger" onclick="confirmDelete()">
+        🗑️ Yes, Delete
+      </button>
     </div>
+  </div>
 </div>
 {% endblock %}
