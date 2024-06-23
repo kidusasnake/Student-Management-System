@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Student — StudentHub{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header fade-in-up">
+    <div>
+        <h1>Edit Student</h1>
+        <p>Update student record #{{ student[0] }}</p>
+    </div>
+    <a href="/" class="btn btn-secondary">
+        ← Back to Dashboard
+    </a>
+</div>
+
+<!-- Form Card -->
+<div class="form-card fade-in-up">
+    <h2>✏️ Update Information</h2>
+    <p class="form-subtitle">Modify the student details below and save your changes</p>
+
+    <form method="POST" id="student-form">
+        <div class="form-group">
+            <label for="name-input">Full Name</label>
+            <input type="text" id="name-input" name="name" value="{{ student[1] }}" placeholder="e.g. John Doe" required>
+            <span class="input-error">Name must be at least 2 characters</span>
+        </div>
+
+        <div class="form-group">
+            <label for="age-input">Age</label>
+            <input type="number" id="age-input" name="age" value="{{ student[2] }}" placeholder="e.g. 21" min="1" max="150" required>
+            <span class="input-error">Please enter a valid age (1-150)</span>
+        </div>
+
+        <div class="form-group">
+            <label for="department-input">Department</label>
+            <input type="text" id="department-input" name="department" value="{{ student[3] }}" placeholder="e.g. Computer Science" required>
+            <span class="input-error">Department is required</span>
+        </div>
+
+        <div class="form-actions">
+            <a href="/" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">💾 Update Student</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
