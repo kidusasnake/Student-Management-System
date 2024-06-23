@@ -9,9 +9,14 @@
         <h1>Dashboard</h1>
         <p>Overview of all registered students</p>
     </div>
-    <a href="/add" class="btn btn-primary" id="add-student-btn">
-        ➕ Add Student
-    </a>
+    <div class="header-actions" style="display: flex; gap: 0.75rem;">
+        <a href="/export" class="btn btn-secondary" id="export-csv-btn">
+            📥 Export CSV
+        </a>
+        <a href="/add" class="btn btn-primary" id="add-student-btn">
+            ➕ Add Student
+        </a>
+    </div>
 </div>
 
 <!-- Stats Cards -->
@@ -41,9 +46,15 @@
 
 <!-- Search Section -->
 <div class="search-section fade-in-up">
+    <select id="search-field" class="search-select">
+        <option value="all">All Fields</option>
+        <option value="name">Name</option>
+        <option value="age">Age</option>
+        <option value="department">Department</option>
+    </select>
     <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" id="search-input" placeholder="Search students by name or department..." autocomplete="off">
+        <input type="text" id="search-input" placeholder="Search students..." autocomplete="off">
     </div>
 </div>
 

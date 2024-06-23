@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect, flash, jsonify
+from flask import Flask, render_template, request, redirect, flash, jsonify, Response
 from database import connect_db  # type: ignore
+import csv
+import io
 
 app = Flask(__name__)
 app.secret_key = "sms_secret_key_2026"
@@ -129,14 +131,25 @@ def delete_student(student_id):
 @app.route("/search")
 def search_students():
     query = request.args.get("q", "").strip()
+    field = request.args.get("field", "all").strip()
 
     conn = connect_db()
     cursor = conn.cursor()
 
     if query:
-        sql = "SELECT * FROM students WHERE name LIKE %s OR department LIKE %s"
         search_term = f"%{query}%"
-        cursor.execute(sql, (search_term, search_term))
+        if field == "name":
+            sql = "SELECT * FROM students WHERE name LIKE %s"
+            cursor.execute(sql, (search_term,))
+        elif field == "department":
+            sql = "SELECT * FROM students WHERE department LIKE %s"
+            cursor.execute(sql, (search_term,))
+        elif field == "age":
+            sql = "SELECT * FROM students WHERE age LIKE %s"
+            cursor.execute(sql, (search_term,))
+        else:
+            sql = "SELECT * FROM students WHERE name LIKE %s OR department LIKE %s"
+            cursor.execute(sql, (search_term, search_term))
     else:
         cursor.execute("SELECT * FROM students")
 
@@ -149,6 +162,29 @@ def search_students():
     ]
 
     return jsonify({"students": students})
+
+
+# EXPORT TO CSV
+@app.route("/export")
+def export_csv():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM students")
+    rows = cursor.fetchall()
+    conn.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'Name', 'Age', 'Department'])
+    
+    for row in rows:
+        writer.writerow(row)
+        
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment;filename=students.csv"}
+    )
 
 
 if __name__ == "__main__":

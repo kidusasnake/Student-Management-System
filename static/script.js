@@ -33,6 +33,7 @@ function initAnimatedCounters() {
 // ===== Live Search =====
 function initLiveSearch() {
     const searchInput = document.getElementById('search-input');
+    const searchField = document.getElementById('search-field');
     if (!searchInput) return;
 
     let debounceTimer;
@@ -41,16 +42,25 @@ function initLiveSearch() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             const query = e.target.value.trim();
-            performSearch(query);
+            const field = searchField ? searchField.value : 'all';
+            performSearch(query, field);
         }, 300);
     });
+
+    if (searchField) {
+        searchField.addEventListener('change', () => {
+            const query = searchInput.value.trim();
+            const field = searchField.value;
+            performSearch(query, field);
+        });
+    }
 }
 
-function performSearch(query) {
+function performSearch(query, field = 'all') {
     const tableBody = document.getElementById('students-tbody');
     if (!tableBody) return;
 
-    fetch(`/search?q=${encodeURIComponent(query)}`)
+    fetch(`/search?q=${encodeURIComponent(query)}&field=${encodeURIComponent(field)}`)
         .then(res => res.json())
         .then(data => {
             if (data.students.length === 0) {

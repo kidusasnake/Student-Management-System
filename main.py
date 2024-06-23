@@ -56,7 +56,8 @@ while True:
     print("1. Add Student")
     print("2. View Students")
     print("3. Delete Student")
-    print("4. Exit")
+    print("4. Update Student")
+    print("5. Exit")
 
     choice = input("Choose option: ")
 
@@ -67,7 +68,31 @@ while True:
     elif choice == "3":
         delete_student()
     elif choice == "4":
+        update_student()
+    elif choice == "5":
         print("Goodbye!")
         break
     else:
         print("Invalid choice!")
+
+def update_student():
+    student_id = input("Enter student ID to update: ")
+    new_name = input("Enter new name: ")
+    new_age = input("Enter new age: ")
+    new_department = input("Enter new department: ")
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    query = """
+    UPDATE students
+    SET name=%s, age=%s, department=%s
+    WHERE id=%s
+    """
+
+    cursor.execute(query, (new_name, new_age, new_department, student_id))
+    conn.commit()
+
+    print("Student updated successfully!")
+
+    conn.close()

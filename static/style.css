@@ -432,7 +432,8 @@ body::before {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     box-shadow: var(--shadow-sm);
 }
 
@@ -454,6 +455,7 @@ body::before {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     border-bottom: 1px solid var(--border-subtle);
+    white-space: nowrap;
 }
 
 .data-table td {
@@ -462,6 +464,7 @@ body::before {
     color: var(--text-secondary);
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     transition: background var(--transition-fast);
+    white-space: nowrap;
 }
 
 .data-table tbody tr {

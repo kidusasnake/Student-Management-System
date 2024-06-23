@@ -8,3 +8,5 @@ def connect_db():
         database="student_db"
     )
     return conn
+
+    
